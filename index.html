@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCA Final Exam</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    .center {
+      text-align: center;
+    }
+    .italic {
+      font-style: italic;
+    }
+    hr {
+      margin: 20px 0;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    details {
+      margin-bottom: 10px;
+    }
+    .timer {
+      float: right;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .question {
+      margin: 10px 0;
+    }
+    .options {
+      margin-left: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    #submitBtn[enabled] {
+      background-color: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <<div class="center">
+  <img src="https://i.ibb.co/GfJ0YK0F/LOGO.jpg" alt="Logo" style="height: 100px; margin-bottom: 10px;">
+  <h1><b>PETRA COMPUTER TRAINING CENTRE</b></h1>
+</div>
+  <div class="center italic">Center Code: EMAX/EN93954</div>
+  <hr>
+  <h2><b>Certificate in Computer Fundamental & Application (CCA)</b></h2>
+  <h3><b>FINAL EXAM</b></h3>
+  <hr>
+  <div>
+   <p> Name: <input type="text" id="studentName">
+    Roll No.: <input type="text" id="rollNo"></p>
+
+<div style="position: fixed; centre: 30px; right: 40px;">
+    <span class="timer" id="timer">Time: 60:00</span>
+  </div>
+<div style="position: fixed; bottom: 30px; right: 40px;">
+  <button class="btn" onclick="startExam()" id="startBtn">Start Exam</button>
+  <button class="btn" id="submitBtn" onclick="submitExam()" disabled>Submit</button>
+</div>
+
+  <form id="examForm">
+    <!-- SECTION I -->
+    <div class="section">
+      <details>
+        <summary><b>I. COMPUTER FUNDAMENTALS (Answer all the questions 1x20=20)</b></summary>
+        <div id="section1"></div>
+      </details>
+    </div>
+
+    <!-- SECTION II -->
+    <div class="section">
+      <details>
+        <summary><b>II. MS PAINT (Answer all the questions 2x10=20)</b></summary>
+        <div id="section2"></div>
+      </details>
+    </div>
+
+    <!-- SECTION III -->
+    <div class="section">
+      <details>
+        <summary><b>III. MS WORD (Answer all the questions 2x10=20)</b></summary>
+        <div id="section3"></div>
+      </details>
+    </div>
+
+    <!-- SECTION IV -->
+    <div class="section">
+      <details>
+        <summary><b>IV. MS EXCEL (Answer all the questions 1x20=20)</b></summary>
+        <div id="section4"></div>
+      </details>
+    </div>
+
+    <!-- SECTION V -->
+    <div class="section">
+      <details>
+        <summary><b>V. MS POWERPOINT (Answer all the questions 2x10=20)</b></summary>
+        <div id="section5"></div>
+      </details>
+    </div>
+  </form>
+<audio id="alertSound">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+</audio>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const examData = {
+  section1: [
+    { q: "Which of the following is the brain of the computer?", options: ["Monitor", "RAM", "CPU", "Keyboard"], answer: 2 },
+    { q: "What does 'www' stand for in a website browser?", options: ["World Wide Web", "Web World Wide", "World Web Wide", "Wide Web World"], answer: 0 },
+    { q: "Which one of the following is NOT an input device?", options: ["Mouse", "Keyboard", "Monitor", "Scanner"], answer: 2 },
+    { q: "Which storage device is known for its portability and high capacity?", options: ["Hard Disk Drive", "CD", "USB Flash Drive", "RAM"], answer: 2 },
+    { q: "What type of software is MS Word?", options: ["Operating System", "Application Software", "Utility Software", "Programming Language"], answer: 1 },
+    { q: "Which of the following is an example of system software?", options: ["MS Excel", "Windows 10", "Chrome", "Photoshop"], answer: 1 },
+    { q: "Which key is used to delete text to the left of the cursor?", options: ["Delete", "Backspace", "Escape", "Enter"], answer: 1 },
+    { q: "What is the full form of CPU?", options: ["Central Program Unit", "Central Processing Unit", "Computer Processing Unit", "Control Program Unit"], answer: 1 },
+    { q: "Which memory is used to store data temporarily?", options: ["ROM", "Hard Disk", "RAM", "SSD"], answer: 2 },
+    { q: "What is the function of an operating system?", options: ["It manages computer hardware", "It runs antivirus", "It provides internet connection", "It prints documents"], answer: 0 },
+    { q: "Which part of the computer displays output?", options: ["Keyboard", "Mouse", "Monitor", "CPU"], answer: 2 },
+    { q: "What does GUI stand for?", options: ["Graphical User Internet", "General User Interface", "Graphical User Interface", "General Utility Interface"], answer: 2 },
+    { q: "Which one is NOT a programming language?", options: ["Python", "Java", "HTML", "Windows"], answer: 3 },
+    { q: "What is the binary number system based on?", options: ["8 digits", "4 digits", "2 digits", "10 digits"], answer: 2 },
+    { q: "What type of device is a printer?", options: ["Input device", "Processing device", "Output device", "Storage device"], answer: 2 },
+    { q: "Which of the following is a permanent storage device?", options: ["RAM", "ROM", "Hard Disk", "Cache"], answer: 2 },
+    { q: "What does 'HTTP' stand for?", options: ["High Text Transfer Protocol", "HyperText Transfer Protocol", "High Transmission Text Protocol", "Hyperlink Text Transfer Process"], answer: 1 },
+    { q: "Which of these is an open-source operating system?", options: ["Windows", "MacOS", "Linux", "DOS"], answer: 2 },
+    { q: "Which part of the computer performs calculations and comparisons?", options: ["Memory", "ALU", "CU", "Monitor"], answer: 1 },
+    { q: "Which of the following allows multiple computers to connect to the internet in a network?", options: ["Monitor", "Modem", "USB", "Printer"], answer: 1 }
+  ],
+  section2: [
+    { q: "Default file format when saving in MS Paint?", options: [".PNG", ".JPEG", ".BMP", ".GIF"], answer: 0 },
+    { q: "Undo shortcut?", options: ["Ctrl + Z", "Ctrl + Y", "Ctrl + U", "Ctrl + Backspace"], answer: 0 },
+    { q: "Tool for drawing freehand lines?", options: ["Brush", "Fill", "Eraser", "Text"], answer: 0 },
+    { q: "Fill tool function?", options: ["Erase everything", "Fill a closed area", "Draw straight lines", "Resize the image"], answer: 1 },
+    { q: "Tool to select rectangular area?", options: ["Free-form selection", "Rectangular selection", "Color picker", "Magnifier"], answer: 1 },
+    { q: "Increase brush size method?", options: ["Scroll up", "Press +", "Choose from Size dropdown", "Double-click brush icon"], answer: 2 },
+    { q: "What does Magnifier do?", options: ["Copy area", "Zoom in/out", "Flip image", "Change color"], answer: 1 },
+    { q: "Fill entire canvas quickly?", options: ["Use Fill tool on blank spot", "Ctrl + F", "Right-click Eraser", "Select All > Delete"], answer: 0 },
+    { q: "Right-click Eraser tool does what?", options: ["Erase to transparent", "Erase to secondary color", "Switch tool", "Undo stroke"], answer: 1 },
+    { q: "Format for smallest image file?", options: ["BMP", "PNG", "JPEG", "GIF"], answer: 2 }
+  ],
+  section3: [
+    { q: "Default file extension of Word document (modern versions)?", options: [".txt", ".pdf", ".doc", ".docx"], answer: 3 },
+    { q: "Bold shortcut?", options: ["Ctrl + B", "Ctrl + U", "Ctrl + I", "Ctrl + C"], answer: 0 },
+    { q: "'Undo' function?", options: ["Delete doc", "Repeat action", "Reverse action", "Save file"], answer: 2 },
+    { q: "'Font' group is in which tab?", options: ["Insert", "Review", "Home", "View"], answer: 2 },
+    { q: "Insert page number?", options: ["Home > Page Number", "Insert > Page Number", "Design > Page Number", "Layout > Page Number"], answer: 1 },
+    { q: "Tool for spelling check?", options: ["Word Count", "Thesaurus", "Translate", "Spelling & Grammar"], answer: 3 },
+    { q: "Valid way to save a document?", options: ["File > Save", "Ctrl + S", "Save icon", "All of the above"], answer: 3 },
+    { q: "Ctrl + A does what?", options: ["Saves", "Closes", "Selects all", "Copies"], answer: 2 },
+    { q: "Change page orientation option?", options: ["View tab", "Layout tab", "References tab", "Home tab"], answer: 1 },
+    { q: "Use of 'Header'?", options: ["Add background", "Show text on first page", "Top text on every page", "Footnotes"], answer: 2 }
+  ],
+  section4: [
+    { q: "Default Excel file extension?", options: [".xls", ".xlsx", ".csv", ".docx"], answer: 1 },
+    { q: "Symbol to start a formula?", options: ["$", "=", "@", "&"], answer: 1 },
+    { q: "SUM(A1:A5) function does what?", options: ["Finds largest", "Counts cells", "Adds numbers", "Subtracts A1 from A5"], answer: 2 },
+    { q: "Save workbook shortcut?", options: ["Ctrl + C", "Ctrl + V", "Ctrl + S", "Ctrl + Z"], answer: 2 },
+    { q: "Average function in Excel?", options: ["MEAN()", "AVG()", "AVERAGE()", "MEDIAN()"], answer: 2 },
+    { q: "NOT a valid data type?", options: ["Text", "Number", "Date", "Paragraph"], answer: 3 },
+    { q: "Double-click fill handle does what?", options: ["Delete content", "Copy full column", "Auto-fill based on adjacent", "New row"], answer: 2 },
+    { q: "What is a cell?", options: ["Graph", "Row + column intersection", "Workbook", "Formula"], answer: 1 },
+    { q: "Create a chart using?", options: ["Insert > Table", "Home > Format", "Insert > Chart", "Review > Chart"], answer: 2 },
+    { q: "Make text bold?", options: ["Right-click > Bold", "Home > B", "Ctrl + B", "All of the above"], answer: 3 }
+  ],
+  section5: [
+    { q: "Default file extension for PowerPoint?", options: [".ppt", ".pptx", ".pdf", ".docx"], answer: 1 },
+    { q: "Tab to insert new slides?", options: ["Home", "Insert", "View", "Design"], answer: 0 },
+    { q: "Purpose of 'Slide Show' tab?", options: ["Change fonts", "Insert shapes", "Run presentation", "Print slides"], answer: 2 },
+    { q: "Start slideshow from beginning?", options: ["F5", "Esc", "Shift + S", "Ctrl + S"], answer: 0 },
+    { q: "What is a slide layout?", options: ["Design template", "Animation order", "Content format", "Slide count"], answer: 2 },
+    { q: "What can you insert into a slide?", options: ["Text", "Pictures", "Videos", "All of the above"], answer: 3 },
+    { q: "Apply visual effects between slides?", options: ["Animations", "Transitions", "Layout", "Themes"], answer: 1 },
+    { q: "'Design' tab function?", options: ["Change size/background", "Spell check", "Add sound", "Insert charts"], answer: 0 },
+    { q: "Add animation to text or objects?", options: ["File", "Insert", "Animations", "Transitions"], answer: 2 },
+    { q: "Use of 'Notes'?", options: ["Show text on slide", "Presenter reminder", "Summarize slides", "Ask questions"], answer: 1 }
+  ]
+};
+    let timerInterval, timeLeft = 120;
+
+    function loadQuestions(sectionId, data) {
+      const container = document.getElementById(sectionId);
+      container.innerHTML = '';
+      data.forEach((item, i) => {
+        const qHTML = `
+          <div class="question">
+            ${i + 1}. ${item.q}<br>
+            <div class="options">
+              ${item.options.map((opt, idx) =>
+                `<label><input type="radio" name="${sectionId}_${i}" value="${idx}"> ${opt}</label><br>`
+              ).join('')}
+            </div>
+          </div>`;
+        container.innerHTML += qHTML;
+      });
+    }
+
+   let examStartTime = null; // Global start time
+
+function formatDateTime(date) {
+  const day = date.getDate();
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+
+  const hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const hour12 = hours % 12 || 12;
+
+  const suffix = (d => {
+    if (d > 3 && d < 21) return 'th';
+    switch (d % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  })(day);
+
+  return `${day}${suffix} ${month} ${year}, ${hour12}:${minutes} ${ampm}`;
+}
+
+function startExam() {
+  const name = document.getElementById('studentName').value.trim();
+  const roll = document.getElementById('rollNo').value.trim();
+
+  if (!name || !roll) {
+    alert("Please enter both Name and Roll No. before starting the exam.");
+    return;
+  }
+
+  document.getElementById('startBtn').disabled = true;
+  examStartTime = new Date(); // Save when exam started
+
+  loadQuestions("section1", examData.section1);
+  loadQuestions("section2", examData.section2);
+  loadQuestions("section3", examData.section3);
+  loadQuestions("section4", examData.section4);
+  loadQuestions("section5", examData.section5);
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    let minutes = Math.floor(timeLeft / 600);
+    let seconds = timeLeft % 600;
+    document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+    if (timeLeft === 60) {
+      document.body.style.backgroundColor = "#fff3cd";
+      document.getElementById('alertSound').play();
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById('submitBtn').enabled = false;
+      submitExam();
+    }
+  }, 1000);
+}
+
+async function submitExam() {
+  document.getElementById('submitBtn').disabled = true;
+
+  const { jsPDF } = window.jspdf;
+  const sectionMarks = {
+    section1: 1,
+    section2: 2,
+    section3: 2,
+    section4: 2,
+    section5: 2
+  };
+
+  const name = document.getElementById('studentName').value || "Student";
+  const roll = document.getElementById('rollNo').value || "N/A";
+
+  const examEndTime = new Date();
+  const examDateTime = formatDateTime(examEndTime);
+  const durationMs = examEndTime - examStartTime;
+  const durationMin = Math.floor(durationMs / 60000);
+  const durationSec = Math.floor((durationMs % 60000) / 1000);
+  const durationText = `Duration Taken: ${durationMin} min ${durationSec} sec`;
+
+  const logoUrl = "https://i.ibb.co/GfJ0YK0F/LOGO.jpg";
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = logoUrl;
+
+  img.onload = () => {
+    const doc = new jsPDF();
+    let y = 20;
+
+    // Add logo
+    const logoWidth = 30;
+    const logoHeight = 30;
+    const centerX = (doc.internal.pageSize.getWidth() - logoWidth) / 2;
+    doc.addImage(img, "JPEG", centerX, y, logoWidth, logoHeight);
+    y += 35;
+
+    function safeText(txt, x = 20) {
+      doc.text(txt, x, y);
+      y += 6;
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+    }
+
+    // Header
+    doc.setFontSize(14);
+    doc.text("PETRA COMPUTER TRAINING CENTRE", 105, y, { align: 'center' });
+    y += 8;
+    doc.setFontSize(11);
+    doc.text("Center Code: EMAX/EN93954", 105, y, { align: 'center' });
+    y += 5;
+    doc.line(20, y, 190, y);
+    y += 10;
+    doc.setFontSize(12);
+    doc.text("Certificate in Computer Fundamental & Application (CCA)", 105, y, { align: 'center' });
+    y += 8;
+    doc.text("FINAL EXAM RESULT SCORE CARD", 105, y, { align: 'center' });
+    y += 10;
+
+    // Calculate total marks
+    let totalMarks = 0;
+    const totalPossible = Object.entries(examData)
+      .reduce((sum, [sec, questions]) => sum + (questions.length * sectionMarks[sec]), 0);
+
+    for (const sec in examData) {
+      const secData = examData[sec];
+      secData.forEach((q, i) => {
+        const radios = document.getElementsByName(`${sec}_${i}`);
+        let selected = -1;
+        radios.forEach((r, idx) => {
+          if (r.checked) selected = idx;
+        });
+        if (selected === q.answer) totalMarks += sectionMarks[sec];
+      });
+    }
+
+    const percentage = ((totalMarks / totalPossible) * 100).toFixed(2);
+    let grade = "F";
+    if (percentage >= 85) grade = "A+";
+    else if (percentage >= 75) grade = "A";
+    else if (percentage >= 60) grade = "B";
+    else if (percentage >= 40) grade = "C";
+    const resultText = totalMarks > 40 ? "Pass" : "Fail";
+
+    // Student Info
+    doc.setFontSize(11);
+    let infoY = y;
+    doc.text(`Name: ${name}`, 20, infoY);
+    doc.text(`Total Score: ${totalMarks} / ${totalPossible}`, 125, infoY);
+    infoY += 6;
+    doc.text(`Roll No.: ${roll}`, 20, infoY);
+    doc.text(`Percentage: ${percentage}%`, 125, infoY);
+    infoY += 6;
+    doc.text(`Exam Date & Time: ${examDateTime}`, 20, infoY);
+    doc.text(`Result: ${resultText}`, 125, infoY);
+    infoY += 6;
+    doc.text(`${durationText}`, 20, infoY);
+    doc.text(`Grade: ${grade}`, 125, infoY);
+    y = infoY + 10;
+
+    // Section Results
+    doc.setFontSize(14);
+    doc.text("RESULT", 20, y);
+    y += 8;
+
+    for (const sec in examData) {
+      const secData = examData[sec];
+      let correct = 0, answered = 0;
+
+      doc.setFontSize(12);
+      safeText(sec.toUpperCase().replace('SECTION', ''));
+
+      secData.forEach((q, i) => {
+        const radios = document.getElementsByName(`${sec}_${i}`);
+        let selected = -1;
+        radios.forEach((r, idx) => {
+          if (r.checked) selected = idx;
+        });
+        if (selected !== -1) answered++;
+        if (selected === q.answer) correct++;
+
+        const ansText = `Q${i + 1}. Your: ${selected !== -1 ? q.options[selected] : "Not Answered"} | Correct: ${q.options[q.answer]}`;
+        doc.setFontSize(10);
+        safeText(ansText);
+      });
+
+      doc.setFontSize(11);
+      safeText(`No. of Questions Answered: ${answered}`);
+      safeText(`Correct: ${correct} × ${sectionMarks[sec]} = ${correct * sectionMarks[sec]}`);
+      y += 4;
+    }
+
+    // Save record
+    const record = {
+      name,
+      roll,
+      examDateTime,
+      durationText,
+      totalMarks,
+      totalPossible,
+      percentage,
+      grade,
+      result: resultText
+    };
+
+    let records = JSON.parse(localStorage.getItem("examRecords") || "[]");
+    records.push(record);
+    localStorage.setItem("examRecords", JSON.stringify(records));
+
+    // Save PDF
+    doc.save(`${name}_CCA_Result.pdf`);
+  };
+}
+
+  </script>
+</body>
+</html>
