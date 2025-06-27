@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard – CCA Exam</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #searchInput {
+      width: 250px;
+      padding: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .btn-clear, .btn-export {
+      margin-top: 20px;
+      padding: 8px 14px;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+    .btn-clear {
+      background-color: #e74c3c;
+    }
+    .btn-clear:hover {
+      background-color: #c0392b;
+    }
+    .btn-export {
+      background-color: #3498db;
+      margin-left: 10px;
+    }
+    .btn-export:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Admin Dashboard – Exam Records</h1>
+
+  <input type="text" id="searchInput" placeholder="Search by Name..." oninput="loadRecords()" />
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Roll No.</th>
+        <th>Exam Date & Time</th>
+        <th>Duration</th>
+        <th>Total Score</th>
+        <th>Percentage</th>
+        <th>Grade</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody id="recordsTable">
+      <!-- Populated by JavaScript -->
+    </tbody>
+  </table>
+
+  <button class="btn-clear" onclick="clearRecords()">Clear All Records</button>
+  <button class="btn-export" onclick="exportToPDF()">Export to PDF</button>
+
+  <script>
+    function loadRecords() {
+      const tableBody = document.getElementById('recordsTable');
+      const searchValue = document.getElementById('searchInput').value.toLowerCase();
+      tableBody.innerHTML = "";
+
+      const records = JSON.parse(localStorage.getItem("examRecords") || "[]");
+
+      const filteredRecords = records.filter(rec =>
+        rec.name.toLowerCase().includes(searchValue)
+      );
+
+      if (filteredRecords.length === 0) {
+        const row = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 8;
+        td.textContent = "No records found.";
+        td.style.textAlign = "center";
+        row.appendChild(td);
+        tableBody.appendChild(row);
+        return;
+      }
+
+      filteredRecords.forEach(rec => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${rec.name}</td>
+          <td>${rec.roll}</td>
+          <td>${rec.examDateTime}</td>
+          <td>${rec.durationText}</td>
+          <td>${rec.totalMarks} / ${rec.totalPossible}</td>
+          <td>${rec.percentage}%</td>
+          <td>${rec.grade}</td>
+          <td>${rec.result || "N/A"}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function clearRecords() {
+      if (confirm("Are you sure you want to delete all records?")) {
+        localStorage.removeItem("examRecords");
+        loadRecords();
+      }
+    }
+
+    async function exportToPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  const records = JSON.parse(localStorage.getItem("examRecords") || "[]");
+
+  if (records.length === 0) {
+    alert("No records available to export.");
+    return;
+  }
+
+  const headers = ["Name", "Roll No", "Exam Date & Time", "Score", "Percent", "Grade", "Result"];
+  const colWidths = [40, 25, 70, 30, 20, 20, 20]; // Adjusted widths without duration
+  const lineHeight = 7;
+  let y = 25;
+  let pageNumber = 1;
+
+  function printHeader() {
+    doc.setFontSize(14);
+    doc.text("Exam Records – CCA", pageWidth / 2, 15, { align: "center" });
+    doc.setFontSize(10);
+
+    let x = 10;
+    doc.setFont("bold");
+    headers.forEach((h, i) => {
+      doc.text(h, x, y);
+      x += colWidths[i];
+    });
+    doc.setFont("normal");
+    y += lineHeight;
+  }
+
+  function printFooter() {
+    const date = new Date();
+    const formattedDate = date.toLocaleString("en-IN", {
+      day: "numeric", month: "short", year: "numeric",
+      hour: "numeric", minute: "2-digit", hour12: true
+    });
+    doc.setFontSize(9);
+    doc.text(`Printed on: ${formattedDate}`, 10, pageHeight - 5);
+    doc.text(`Page ${pageNumber}`, pageWidth - 20, pageHeight - 5);
+  }
+
+  printHeader();
+
+  records.forEach((rec, index) => {
+    if (y > pageHeight - 20) {
+      printFooter();
+      doc.addPage();
+      y = 25;
+      pageNumber++;
+      printHeader();
+    }
+
+    let x = 10;
+    const row = [
+      rec.name,
+      rec.roll,
+      rec.examDateTime,
+      `${rec.totalMarks}/${rec.totalPossible}`,
+      `${rec.percentage}%`,
+      rec.grade,
+      rec.result || "N/A"
+    ];
+
+    row.forEach((val, i) => {
+      doc.text(val.toString(), x, y);
+      x += colWidths[i];
+    });
+
+    y += lineHeight;
+  });
+
+  printFooter();
+  doc.save("Exam_Records.pdf");
+}
+
+    loadRecords();
+  </script>
+
+</body>
+</html>
