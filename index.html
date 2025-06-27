@@ -259,7 +259,7 @@ function startExam() {
   timerInterval = setInterval(() => {
     timeLeft--;
     let minutes = Math.floor(timeLeft / 60);
-    let seconds = timeLeft % 3600;
+    let seconds = timeLeft % 60;
     document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
     if (timeLeft === 60) {
