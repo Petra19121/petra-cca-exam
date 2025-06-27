@@ -190,7 +190,7 @@
     { q: "Use of 'Notes'?", options: ["Show text on slide", "Presenter reminder", "Summarize slides", "Ask questions"], answer: 1 }
   ]
 };
-    let timerInterval, timeLeft = 1800;
+    let timerInterval, timeLeft = 3600;
 
     function loadQuestions(sectionId, data) {
       const container = document.getElementById(sectionId);
@@ -258,8 +258,8 @@ function startExam() {
 
   timerInterval = setInterval(() => {
     timeLeft--;
-    let minutes = Math.floor(timeLeft / 1800);
-    let seconds = timeLeft % 1800;
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 3600;
     document.getElementById('timer').textContent = `Time: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
 
     if (timeLeft === 60) {
